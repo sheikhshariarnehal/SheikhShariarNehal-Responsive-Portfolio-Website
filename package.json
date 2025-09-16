@@ -6,9 +6,9 @@
   "scripts": {
     "start": "node api/index.js",
     "dev": "nodemon server.js",
-    "build": "echo 'Static files ready for deployment'",
+    "build": "npm install && echo 'Build complete'",
     "cms": "node server.js && start http://localhost:3000/cms",
-    "vercel-build": "echo 'Vercel build complete'"
+    "vercel-build": "npm install"
   },
   "keywords": [
     "portfolio",
