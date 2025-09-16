@@ -1,38 +1,76 @@
 {
   "version": 2,
+  "name": "shariar-nehal-portfolio",
   "builds": [
     {
-      "src": "api/index.js",
+      "src": "server.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "assets/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "projects/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "experience/**",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "cms/**",
+      "use": "@vercel/static"
     }
   ],
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api"
+      "src": "/api/(.*)",
+      "dest": "/server.js"
     },
     {
-      "source": "/cms",
-      "destination": "/api"
+      "src": "/cms/(.*)",
+      "dest": "/cms/$1"
     },
     {
-      "source": "/projects",
-      "destination": "/api"
+      "src": "/projects/(.*)",
+      "dest": "/projects/$1"
     },
     {
-      "source": "/experience",
-      "destination": "/api"
+      "src": "/experience/(.*)",
+      "dest": "/experience/$1"
     },
     {
-      "source": "/test-deployment.html",
-      "destination": "/api"
+      "src": "/assets/(.*)",
+      "dest": "/assets/$1"
     },
     {
-      "source": "/",
-      "destination": "/api"
+      "src": "/(.*)",
+      "dest": "/$1"
     }
   ],
   "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
     {
       "source": "/assets/(.*)",
       "headers": [
@@ -42,5 +80,23 @@
         }
       ]
     }
-  ]
+  ],
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap.xml"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "/robots.txt"
+    }
+  ],
+  "functions": {
+    "server.js": {
+      "maxDuration": 10
+    }
+  },
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

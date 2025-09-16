@@ -2,13 +2,12 @@
   "name": "shariar-nehal-portfolio",
   "version": "2.0.0",
   "description": "Professional portfolio website for Shariar Nehal - Full Stack Developer & Graphic Designer with CMS functionality",
-  "main": "api/index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node api/index.js",
+    "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "npm install && echo 'Build complete'",
-    "cms": "node server.js && start http://localhost:3000/cms",
-    "vercel-build": "npm install"
+    "build": "echo 'Build complete - ready for deployment'",
+    "cms": "node server.js && start http://localhost:3000/cms"
   },
   "keywords": [
     "portfolio",

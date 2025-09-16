@@ -14,10 +14,6 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Serve static files
 app.use(express.static('.'));
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.use('/projects', express.static(path.join(__dirname, 'projects')));
-app.use('/experience', express.static(path.join(__dirname, 'experience')));
-app.use('/cms', express.static(path.join(__dirname, 'cms')));
 
 // File paths
 const PROJECTS_FILE = path.join(__dirname, 'projects', 'projects.json');
@@ -211,21 +207,19 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Serve main pages
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.get('/projects', (req, res) => {
-    res.sendFile(path.join(__dirname, 'projects', 'index.html'));
-});
-
-app.get('/experience', (req, res) => {
-    res.sendFile(path.join(__dirname, 'experience', 'index.html'));
-});
-
+// Serve CMS dashboard
 app.get('/cms', (req, res) => {
     res.sendFile(path.join(__dirname, 'cms', 'index.html'));
+});
+
+// Serve test page
+app.get('/cms/test', (req, res) => {
+    res.sendFile(path.join(__dirname, 'cms', 'test.html'));
+});
+
+// Default route - serve portfolio
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 // Error handling middleware
@@ -242,13 +236,7 @@ app.use((error, req, res, next) => {
 
 // 404 handler
 app.use((req, res) => {
-    // For API routes, return JSON
-    if (req.path.startsWith('/api/')) {
-        res.status(404).json({ error: 'API route not found' });
-    } else {
-        // For regular routes, serve 404.html
-        res.status(404).sendFile(path.join(__dirname, '404.html'));
-    }
+    res.status(404).json({ error: 'Route not found' });
 });
 
 // Start server
