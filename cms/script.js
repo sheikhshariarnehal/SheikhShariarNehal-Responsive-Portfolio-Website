@@ -5,35 +5,71 @@ class ProjectCMS {
         this.filteredProjects = [];
         this.currentEditIndex = -1;
         this.selectedProjects = new Set();
+        this.isReadOnly = false; // Track read-only mode
         
         this.init();
     }
 
     async init() {
-        await this.loadProjects();
-        this.setupEventListeners();
-        this.updateStats();
-        this.renderProjects();
+        console.log('CMS Dashboard initializing...');
+        try {
+            await this.loadProjects();
+            this.setupEventListeners();
+            this.updateStats();
+            this.renderProjects();
+            console.log('CMS Dashboard initialized successfully');
+        } catch (error) {
+            console.error('Failed to initialize CMS Dashboard:', error);
+            this.showToast('Failed to initialize dashboard', 'error');
+        }
     }
 
     // Load projects from JSON file
     async loadProjects() {
         try {
             this.showLoading(true);
+            console.log('Loading projects...');
 
-            // Use Node.js API
-            const response = await fetch('/api/projects');
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            // Try Node.js API first
+            try {
+                console.log('Attempting to load from API...');
+                const response = await fetch('/api/projects');
+                if (response.ok) {
+                    this.projects = await response.json();
+                    this.filteredProjects = [...this.projects];
+                    console.log('Loaded', this.projects.length, 'projects from API');
+                    this.showToast('Projects loaded successfully from API', 'success');
+                    return;
+                }
+                console.log('API response not ok:', response.status);
+            } catch (apiError) {
+                console.warn('API not available, trying static file:', apiError);
             }
 
-            this.projects = await response.json();
-            this.filteredProjects = [...this.projects];
-            this.showToast('Projects loaded successfully', 'success');
+            // Fallback to static JSON file
+            try {
+                console.log('Attempting to load from static file...');
+                const response = await fetch('../projects/projects.json');
+                if (response.ok) {
+                    this.projects = await response.json();
+                    this.filteredProjects = [...this.projects];
+                    console.log('Loaded', this.projects.length, 'projects from static file');
+                    this.showToast('Projects loaded from static file (read-only mode)', 'warning');
+                    // Disable save functionality in read-only mode
+                    this.setReadOnlyMode(true);
+                    return;
+                }
+                console.log('Static file response not ok:', response.status);
+            } catch (staticError) {
+                console.error('Failed to load from static file:', staticError);
+            }
+
+            // If both fail, show error
+            throw new Error('Both API and static file loading failed');
+
         } catch (error) {
             console.error('Error loading projects:', error);
-            this.showToast('Failed to load projects. Make sure the Node.js server is running.', 'error');
+            this.showToast('Failed to load projects. Check your deployment setup.', 'error');
             this.projects = [];
             this.filteredProjects = [];
         } finally {
@@ -43,6 +79,12 @@ class ProjectCMS {
 
     // Save projects to JSON file
     async saveProjects() {
+        // Check if in read-only mode
+        if (this.isReadOnly) {
+            this.showToast('Cannot save in read-only mode. API not available.', 'warning');
+            return false;
+        }
+
         try {
             // Use Node.js API
             const response = await fetch('/api/projects', {
@@ -64,9 +106,12 @@ class ProjectCMS {
             localStorage.setItem('cms_projects_backup', JSON.stringify(this.projects));
             localStorage.setItem('cms_last_updated', new Date().toISOString());
 
+            return true;
         } catch (error) {
             console.error('Error saving projects:', error);
-            this.showToast('Failed to save projects. Make sure the Node.js server is running.', 'error');
+            this.showToast('Failed to save projects. API not available - switching to read-only mode.', 'error');
+            this.setReadOnlyMode(true);
+            return false;
         }
     }
 
@@ -83,6 +128,32 @@ class ProjectCMS {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
+    }
+
+    // Set read-only mode when API is not available
+    setReadOnlyMode(isReadOnly) {
+        this.isReadOnly = isReadOnly;
+        
+        if (isReadOnly) {
+            // Disable editing buttons
+            const editButtons = document.querySelectorAll('.btn-primary, .btn-danger');
+            editButtons.forEach(btn => {
+                if (btn.id !== 'export-btn') { // Keep export button enabled
+                    btn.disabled = true;
+                    btn.title = 'Editing disabled - API not available';
+                }
+            });
+            
+            // Show read-only indicator
+            const header = document.querySelector('.header .container');
+            if (header && !header.querySelector('.read-only-indicator')) {
+                const indicator = document.createElement('div');
+                indicator.className = 'read-only-indicator';
+                indicator.innerHTML = '<i class="fas fa-lock"></i> Read-Only Mode';
+                indicator.style.cssText = 'color: #f39c12; font-weight: bold; margin-left: auto;';
+                header.appendChild(indicator);
+            }
+        }
     }
 
     // Setup event listeners
@@ -582,16 +653,23 @@ class ProjectCMS {
 
     // Render projects table
     renderProjects() {
+        console.log('Rendering projects...', this.filteredProjects.length, 'projects');
         const tbody = document.getElementById('projects-tbody');
         const noProjects = document.getElementById('no-projects');
 
-        if (this.filteredProjects.length === 0) {
-            tbody.innerHTML = '';
-            noProjects.style.display = 'block';
+        if (!tbody) {
+            console.error('Projects tbody element not found');
             return;
         }
 
-        noProjects.style.display = 'none';
+        if (this.filteredProjects.length === 0) {
+            tbody.innerHTML = '';
+            if (noProjects) noProjects.style.display = 'block';
+            console.log('No projects to display');
+            return;
+        }
+
+        if (noProjects) noProjects.style.display = 'none';
 
         tbody.innerHTML = this.filteredProjects.map((project, index) => {
             const originalIndex = this.projects.indexOf(project);

@@ -799,3 +799,33 @@ section h2 i {
         min-width: auto;
     }
 }
+
+/* Read-only mode indicator */
+.read-only-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(243, 156, 18, 0.1);
+    border: 1px solid var(--warning-color);
+    border-radius: var(--border-radius);
+    color: var(--warning-color);
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.read-only-indicator i {
+    font-size: 1rem;
+}
+
+/* Disabled button styles */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #bdc3c7 !important;
+}
+
+.btn:disabled:hover {
+    transform: none !important;
+    background: #bdc3c7 !important;
+}
