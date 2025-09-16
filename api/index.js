@@ -11,9 +11,15 @@ app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Serve static files
-app.use(express.static(path.join(__dirname, '..')));
-app.use('/assets', express.static(path.join(__dirname, '..', 'assets')));
+// Serve static files with proper headers
+app.use(express.static(path.join(__dirname, '..'), {
+    maxAge: '1d',
+    etag: false
+}));
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets'), {
+    maxAge: '1y',
+    etag: false
+}));
 app.use('/projects', express.static(path.join(__dirname, '..', 'projects')));
 app.use('/experience', express.static(path.join(__dirname, '..', 'experience')));
 app.use('/cms', express.static(path.join(__dirname, '..', 'cms')));
