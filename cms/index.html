@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio CMS Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="../assets/images/favicon.png" type="image/x-png">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-cogs"></i>
+                <span>Portfolio CMS</span>
+            </div>
+            <nav class="nav">
+                <a href="../index.html" class="nav-link" target="_blank">
+                    <i class="fas fa-external-link-alt"></i>
+                    View Portfolio
+                </a>
+                <a href="../projects/index.html" class="nav-link" target="_blank">
+                    <i class="fas fa-folder-open"></i>
+                    View Projects
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Dashboard Stats -->
+            <section class="stats-section">
+                <h2><i class="fas fa-chart-bar"></i> Dashboard Overview</h2>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-project-diagram"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-projects">0</h3>
+                            <p>Total Projects</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-categories">0</h3>
+                            <p>Categories</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="last-updated">Never</h3>
+                            <p>Last Updated</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <section class="actions-section">
+                <div class="actions-bar">
+                    <button class="btn btn-primary" id="add-project-btn">
+                        <i class="fas fa-plus"></i>
+                        Add New Project
+                    </button>
+                    <button class="btn btn-secondary" id="import-btn">
+                        <i class="fas fa-upload"></i>
+                        Import Projects
+                    </button>
+                    <button class="btn btn-secondary" id="export-btn">
+                        <i class="fas fa-download"></i>
+                        Export Projects
+                    </button>
+                    <button class="btn btn-danger" id="delete-selected-btn" disabled>
+                        <i class="fas fa-trash"></i>
+                        Delete Selected
+                    </button>
+                </div>
+            </section>
+
+            <!-- Filters and Search -->
+            <section class="filters-section">
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Search projects...">
+                    </div>
+                    <div class="filter-group">
+                        <label for="category-filter">Category:</label>
+                        <select id="category-filter">
+                            <option value="">All Categories</option>
+                            <option value="mern">MERN Stack</option>
+                            <option value="lamp">LAMP Stack</option>
+                            <option value="basicweb">Basic Web</option>
+                            <option value="android">Android App</option>
+                        </select>
+                    </div>
+                    <div class="sort-group">
+                        <label for="sort-by">Sort by:</label>
+                        <select id="sort-by">
+                            <option value="name">Name</option>
+                            <option value="category">Category</option>
+                            <option value="date">Date Added</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Projects Table -->
+            <section class="projects-section">
+                <h2><i class="fas fa-list"></i> Projects Management</h2>
+                <div class="table-container">
+                    <table class="projects-table" id="projects-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="select-all">
+                                </th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Links</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projects-tbody">
+                            <!-- Projects will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Loading projects...
+                </div>
+                <div class="no-projects" id="no-projects" style="display: none;">
+                    <i class="fas fa-folder-open"></i>
+                    <p>No projects found</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Add/Edit Project Modal -->
+    <div class="modal" id="project-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add New Project</h3>
+                <button class="modal-close" id="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="project-form">
+                    <div class="form-group">
+                        <label for="project-name">Project Name *</label>
+                        <input type="text" id="project-name" name="name" required>
+                        <div class="error-message" id="name-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="project-desc">Description *</label>
+                        <textarea id="project-desc" name="desc" rows="4" required></textarea>
+                        <div class="error-message" id="desc-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="project-category">Category *</label>
+                        <select id="project-category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="mern">MERN Stack</option>
+                            <option value="lamp">LAMP Stack</option>
+                            <option value="basicweb">Basic Web</option>
+                            <option value="android">Android App</option>
+                        </select>
+                        <div class="error-message" id="category-error"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="project-image">Project Image</label>
+                        <div class="image-upload-area" id="image-upload-area">
+                            <div class="upload-placeholder">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p>Drag & drop an image here or click to browse</p>
+                                <small>Supported formats: PNG, JPG, JPEG</small>
+                            </div>
+                            <input type="file" id="project-image" name="image" accept="image/*" hidden>
+                            <div class="image-preview" id="image-preview" style="display: none;">
+                                <img id="preview-img" src="" alt="Preview">
+                                <button type="button" class="remove-image" id="remove-image">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="error-message" id="image-error"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="project-view-link">View Link *</label>
+                            <input type="url" id="project-view-link" name="viewLink" required>
+                            <div class="error-message" id="view-link-error"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="project-code-link">Code Link *</label>
+                            <input type="url" id="project-code-link" name="codeLink" required>
+                            <div class="error-message" id="code-link-error"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" id="cancel-btn">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="save-btn">
+                            <i class="fas fa-save"></i>
+                            Save Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirm-modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h3 id="confirm-title">Confirm Action</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message">Are you sure you want to perform this action?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="confirm-cancel">Cancel</button>
+                <button class="btn btn-danger" id="confirm-ok">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Hidden file input for import -->
+    <input type="file" id="import-file" accept=".json" hidden>
+
+    <!-- Scripts -->
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 [
   {
-    "name": "NotyStack Android",
+    "name": "test",
     "desc": "Fully fledged android CRUD app based on different design patterns. Built using Java, XML, SQLite, Firebase, RoomDB, MVVM.",
-    "image": "notystackandroid",
     "category": "android",
+    "image": "project",
     "links": {
       "view": "https://www.linkedin.com/in/sheikh-shariar-nehal-473166268/",
       "code": "https://github.com/sheikhshariarnehal"

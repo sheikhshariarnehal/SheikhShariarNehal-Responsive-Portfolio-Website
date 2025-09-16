@@ -1,0 +1,49 @@
+{
+  "name": "shariar-nehal-portfolio",
+  "version": "2.0.0",
+  "description": "Professional portfolio website for Shariar Nehal - Full Stack Developer & Graphic Designer with CMS functionality",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "build": "echo 'Build complete - ready for deployment'",
+    "cms": "node server.js && start http://localhost:3000/cms"
+  },
+  "keywords": [
+    "portfolio",
+    "full-stack-developer",
+    "graphic-designer",
+    "mern-stack",
+    "nodejs",
+    "express",
+    "cms",
+    "shariar-nehal",
+    "web-developer",
+    "android-developer",
+    "ui-ux-designer"
+  ],
+  "author": {
+    "name": "Sheikh Shariar Nehal",
+    "email": "sheikhshariarnehal@gmail.com",
+    "url": "https://shariarnehal.netlify.app"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sheikhshariarnehal/portfolio"
+  },
+  "homepage": "https://shariarnehal.netlify.app",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}

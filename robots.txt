@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://shariarnehal.netlify.app/sitemap.xml
+
+# Disallow CMS and admin areas
+Disallow: /cms/
+Disallow: /node_modules/
+Disallow: /*.json$
+
+# Allow important pages
+Allow: /projects/
+Allow: /experience/
+Allow: /assets/
+
+# Crawl delay
+Crawl-delay: 1
