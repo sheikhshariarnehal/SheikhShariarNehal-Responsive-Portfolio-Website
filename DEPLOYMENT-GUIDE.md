@@ -30,6 +30,7 @@ This guide covers deployment to **Vercel**, **cPanel**, and **Render** platforms
    - Click "New Project"
    - Import your GitHub repository
    - Vercel will auto-detect the configuration from `vercel.json`
+   - **Important**: The `vercel.json` has been optimized to avoid conflicts
    - Click "Deploy"
 
 3. **Environment Variables** (if needed)
@@ -163,9 +164,11 @@ This guide covers deployment to **Vercel**, **cPanel**, and **Render** platforms
 ### Common Issues
 
 **Vercel Deployment Fails**
+- ✅ **FIXED**: `vercel.json` optimized to avoid `builds` + `functions` conflict
 - Check `vercel.json` syntax
 - Ensure all dependencies in `package.json`
 - Verify Node.js version compatibility
+- If you see "functions property cannot be used with builds", the issue is resolved
 
 **cPanel Files Not Loading**
 - Check file permissions (755 for directories, 644 for files)
