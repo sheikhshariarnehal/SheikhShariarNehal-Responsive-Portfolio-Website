@@ -11,7 +11,23 @@
       "destination": "/api"
     },
     {
-      "source": "/((?!assets|favicon\\.ico|sitemap\\.xml|robots\\.txt|.*\\.(css|js|png|jpg|jpeg|gif|svg|webp|ico|woff|woff2|ttf|eot)).*)",
+      "source": "/cms",
+      "destination": "/api"
+    },
+    {
+      "source": "/projects",
+      "destination": "/api"
+    },
+    {
+      "source": "/experience",
+      "destination": "/api"
+    },
+    {
+      "source": "/test-deployment.html",
+      "destination": "/api"
+    },
+    {
+      "source": "/",
       "destination": "/api"
     }
   ],
