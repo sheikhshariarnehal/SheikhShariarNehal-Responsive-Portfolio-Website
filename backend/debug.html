@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug API</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .result { background: #f5f5f5; padding: 10px; margin: 10px 0; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>API Debug Page</h1>
+    
+    <div class="test">
+        <h3>Test 1: Get All Projects</h3>
+        <button onclick="testGetAllProjects()">Test Get All Projects</button>
+        <div id="result1" class="result"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 2: Get Single Project</h3>
+        <input type="text" id="projectId" placeholder="Enter project ID (e.g., project_1)" value="project_1">
+        <button onclick="testGetSingleProject()">Test Get Single Project</button>
+        <div id="result2" class="result"></div>
+    </div>
+    
+    <div class="test">
+        <h3>Test 3: Upload Image</h3>
+        <input type="file" id="testFile" accept="image/*">
+        <button onclick="testUploadImage()">Test Upload</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <script>
+        async function testGetAllProjects() {
+            try {
+                const response = await fetch('/api/projects');
+                const data = await response.json();
+                document.getElementById('result1').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result1').innerHTML = 'Error: ' + error.message;
+            }
+        }
+        
+        async function testGetSingleProject() {
+            try {
+                const projectId = document.getElementById('projectId').value;
+                const response = await fetch(`/api/projects/${projectId}`);
+                const data = await response.json();
+                document.getElementById('result2').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('result2').innerHTML = 'Error: ' + error.message;
+            }
+        }
+        
+        async function testUploadImage() {
+            try {
+                const fileInput = document.getElementById('testFile');
+                const file = fileInput.files[0];
+                
+                if (!file) {
+                    document.getElementById('result3').innerHTML = 'Please select a file';
+                    return;
+                }
+                
+                const formData = new FormData();
+                formData.append('image', file);
+                
+                const response = await fetch('/api/projects/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                document.getElementById('result3').innerHTML = 
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                    
+            } catch (error) {
+                document.getElementById('result3').innerHTML = 'Error: ' + error.message;
+            }
+        }
+    </script>
+</body>
+</html>

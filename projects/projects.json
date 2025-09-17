@@ -1,9 +1,29 @@
 [
   {
-    "name": "test",
+    "name": "Responsive Portfolio",
+    "desc": "A Responsive Portfolio Website showcases your skills and projects, adapting seamlessly to all devices for a professional online presence.. Built using Html, CSS, JS ",
+    "image": "ResponsivePortfolioWebsite",
+    "category": "basicweb",
+    "links": {
+      "view": "https://sheikhshariarnehal.github.io/Responsive-Portfolio-Website",
+      "code": "https://github.com/sheikhshariarnehal"
+    }
+  },
+  {
+    "name": "infixedu",
+    "desc": "Education management system for schools and institutes, offering tools for managing students, staff, attendance, exams, fees, and communication in one platform.",
+    "image": "infixedu",
+    "category": "mern",
+    "links": {
+      "view": "https://www.linkedin.com/in/sheikh-shariar-nehal-473166268/",
+      "code": "https://github.com/sheikhshariarnehal"
+    }
+  },
+  {
+    "name": "NotyStack Android",
     "desc": "Fully fledged android CRUD app based on different design patterns. Built using Java, XML, SQLite, Firebase, RoomDB, MVVM.",
+    "image": "notystackandroid",
     "category": "android",
-    "image": "project",
     "links": {
       "view": "https://www.linkedin.com/in/sheikh-shariar-nehal-473166268/",
       "code": "https://github.com/sheikhshariarnehal"
@@ -50,13 +70,13 @@
     }
   },
   {
-    "name": "Flipkart MERN",
-    "desc": "Full-Stack Flipkart with Admin Dashboard and Paytm Payment Gateway. MERN Stack WebApp, ready to use for business.",
-    "image": "flipkartmern",
+    "name": "Face Recognition",
+    "desc": "The Face-Based Attendance System is a Python and OpenCV project designed to automate attendance tracking using facial recognition.",
+    "image": "facerecognition",
     "category": "mern",
     "links": {
-      "view": "https://flipkartwebs.herokuapp.com/",
-      "code": "https://github.com/sheikhshariarnehal"
+      "view": "https://github.com/sheikhshariarnehal/Facial-Recognition-Attendance-System_python-poject",
+      "code": "https://github.com/sheikhshariarnehal/Facial-Recognition-Attendance-System_python-poject"
     }
   },
   {

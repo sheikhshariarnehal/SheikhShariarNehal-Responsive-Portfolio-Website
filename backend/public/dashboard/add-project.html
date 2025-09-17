@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Project - Portfolio Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard/admin">
+                <i class="fas fa-tachometer-alt me-2"></i>
+                Portfolio Admin
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard/admin">
+                            <i class="fas fa-home me-1"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard/projects">
+                            <i class="fas fa-project-diagram me-1"></i>Projects
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/dashboard/add-project">
+                            <i class="fas fa-plus me-1"></i>Add Project
+                        </a>
+                    </li>
+                </ul>
+                
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i>
+                            <span id="username">Admin</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="h3 mb-0">
+                        <i class="fas fa-plus me-2"></i>
+                        Add New Project
+                    </h1>
+                    <a href="/dashboard/projects" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Projects
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Project Information
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div id="alert-container"></div>
+                        
+                        <form id="addProjectForm">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="projectName" class="form-label">Project Name *</label>
+                                    <input type="text" class="form-control" id="projectName" name="name" required maxlength="200">
+                                    <div class="form-text">Enter a descriptive name for your project</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="projectCategory" class="form-label">Category *</label>
+                                    <select class="form-select" id="projectCategory" name="category" required>
+                                        <option value="">Select a category</option>
+                                        <option value="mern">MERN Stack</option>
+                                        <option value="android">Android</option>
+                                        <option value="basicweb">Basic Web</option>
+                                        <option value="lamp">LAMP Stack</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="projectDescription" class="form-label">Description *</label>
+                                <textarea class="form-control" id="projectDescription" name="desc" rows="4" required maxlength="1000"></textarea>
+                                <div class="form-text">
+                                    <span id="descCharCount">0</span>/1000 characters
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="projectViewLink" class="form-label">View Link *</label>
+                                    <input type="url" class="form-control" id="projectViewLink" name="viewLink" required>
+                                    <div class="form-text">URL where the project can be viewed</div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="projectCodeLink" class="form-label">Code Link *</label>
+                                    <input type="url" class="form-control" id="projectCodeLink" name="codeLink" required>
+                                    <div class="form-text">URL to the project's source code</div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label">Project Image *</label>
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="file-upload-area" id="fileUploadArea">
+                                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                            <h5>Upload Project Image</h5>
+                                            <p class="text-muted mb-3">Drag and drop an image here, or click to select</p>
+                                            <input type="file" class="d-none" id="imageFile" accept="image/*">
+                                            <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('imageFile').click()">
+                                                <i class="fas fa-folder-open me-2"></i>Choose File
+                                            </button>
+                                            <div class="mt-2">
+                                                <small class="text-muted">Supported formats: JPG, PNG, GIF, WebP (Max: 5MB)</small>
+                                            </div>
+                                        </div>
+                                        <input type="hidden" id="projectImage" name="image" required>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div id="imagePreview" class="text-center" style="display: none;">
+                                            <img id="previewImg" class="image-preview mb-2" alt="Preview">
+                                            <div>
+                                                <button type="button" class="btn btn-sm btn-outline-danger" id="removeImage">
+                                                    <i class="fas fa-times me-1"></i>Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="d-flex gap-3">
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <i class="fas fa-save me-2"></i>Create Project
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" id="resetBtn">
+                                    <i class="fas fa-undo me-2"></i>Reset Form
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/add-project.js"></script>
+</body>
+</html>

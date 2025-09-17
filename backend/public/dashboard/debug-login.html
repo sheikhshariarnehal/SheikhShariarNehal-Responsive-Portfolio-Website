@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Login - Portfolio Admin</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .container { max-width: 600px; margin: 0 auto; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, button { padding: 10px; width: 100%; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 5px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Debug Login Test</h1>
+        <p>This page will help debug the login issue step by step.</p>
+        
+        <div class="form-group">
+            <button onclick="testServerHealth()">1. Test Server Health</button>
+        </div>
+        
+        <div class="form-group">
+            <button onclick="testLoginEndpoint()">2. Test Login Endpoint</button>
+        </div>
+        
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" value="admin">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" value="admin123">
+        </div>
+        
+        <div class="form-group">
+            <button onclick="testLogin()">3. Test Login with Credentials</button>
+        </div>
+        
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function addResult(title, content, type = 'info') {
+            const results = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.innerHTML = `<h3>${title}</h3><pre>${content}</pre>`;
+            results.appendChild(div);
+        }
+
+        async function testServerHealth() {
+            try {
+                addResult('Testing Server Health...', 'Checking /api/health endpoint', 'info');
+                
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addResult('✅ Server Health Check', JSON.stringify(data, null, 2), 'success');
+                } else {
+                    addResult('❌ Server Health Check Failed', `Status: ${response.status}\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Server Health Check Error', error.message, 'error');
+            }
+        }
+
+        async function testLoginEndpoint() {
+            try {
+                addResult('Testing Login Endpoint...', 'Checking if /api/auth/login accepts requests', 'info');
+                
+                // Test with empty body first
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                });
+                
+                const data = await response.json();
+                
+                if (response.status === 400) {
+                    addResult('✅ Login Endpoint Accessible', `Endpoint is working (validation error expected)\nStatus: ${response.status}\n${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    addResult('⚠️ Unexpected Response', `Status: ${response.status}\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Login Endpoint Error', error.message, 'error');
+            }
+        }
+
+        async function testLogin() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                addResult('Testing Login...', `Username: ${username}\nPassword: ${password}`, 'info');
+                
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    addResult('✅ Login Successful!', `Token: ${data.data.token.substring(0, 50)}...\nUser: ${JSON.stringify(data.data.user, null, 2)}`, 'success');
+                    
+                    // Test token verification
+                    setTimeout(() => testTokenVerification(data.data.token), 1000);
+                } else {
+                    addResult('❌ Login Failed', `Status: ${response.status}\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Login Error', error.message, 'error');
+            }
+        }
+
+        async function testTokenVerification(token) {
+            try {
+                addResult('Testing Token Verification...', 'Verifying the received token', 'info');
+                
+                const response = await fetch('/api/auth/verify', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    addResult('✅ Token Verification Successful!', JSON.stringify(data, null, 2), 'success');
+                } else {
+                    addResult('❌ Token Verification Failed', `Status: ${response.status}\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                addResult('❌ Token Verification Error', error.message, 'error');
+            }
+        }
+
+        // Auto-run health check on page load
+        window.addEventListener('load', () => {
+            setTimeout(testServerHealth, 500);
+        });
+    </script>
+</body>
+</html>
